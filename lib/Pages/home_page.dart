@@ -48,6 +48,16 @@ class HomePage extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(onPressed: () {
+                Navigator.pushNamed(context, Routes.channelTransfer);
+              }, label: const Text('Channel Transfer'),
+                icon: const Icon(Icons.transfer_within_a_station),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+              ),
             ],
           ),
         ),
