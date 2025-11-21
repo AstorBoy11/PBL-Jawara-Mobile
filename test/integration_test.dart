@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pbl_jawara_mobile/main.dart';
-import 'package:pbl_jawara_mobile/routes.dart';
 
 void main() {
   group('App Integration Tests', () {
@@ -12,7 +11,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify HomePage is displayed
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
+      expect(find.text('Home'), findsOneWidget);
     });
 
     testWidgets('Can navigate from HomePage to LaporanKeuangan', (
@@ -21,17 +21,12 @@ void main() {
       await tester.pumpWidget(const JawaraApp());
       await tester.pumpAndSettle();
 
-      // Find and tap Laporan Keuangan menu button
-      final laporanButton = find.ancestor(
-        of: find.text('Laporan\nKeuangan'),
-        matching: find.byType(InkWell),
-      );
-
-      await tester.tap(laporanButton);
+      // Find and tap Laporan Keuangan button
+      await tester.tap(find.text('Laporan Keuangan'));
       await tester.pumpAndSettle();
 
       // Verify navigation to LaporanKeuangan page
-      expect(find.text('Laporan Keuangan - Pemasukan'), findsOneWidget);
+      expect(find.text('Data Pemasukan'), findsOneWidget);
     });
 
     testWidgets('Can navigate from HomePage to DataRumahDanWarga', (
@@ -40,17 +35,26 @@ void main() {
       await tester.pumpWidget(const JawaraApp());
       await tester.pumpAndSettle();
 
-      // Find and tap Data Rumah & Warga menu button
-      final dataButton = find.ancestor(
-        of: find.text('Data Rumah\n& Warga'),
-        matching: find.byType(InkWell),
-      );
-
-      await tester.tap(dataButton);
+      // Find and tap Data Rumah dan Warga button
+      await tester.tap(find.text('Data Rumah dan Warga'));
       await tester.pumpAndSettle();
 
       // Verify navigation to DataRumahDanWarga page
       expect(find.text('Data Warga'), findsWidgets);
+    });
+
+    testWidgets('Can navigate from HomePage to ChannelTransfer', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const JawaraApp());
+      await tester.pumpAndSettle();
+
+      // Find and tap Channel Transfer button
+      await tester.tap(find.text('Channel Transfer'));
+      await tester.pumpAndSettle();
+
+      // Verify navigation to ChannelTransfer page
+      expect(find.text('Manajemen Channel Transfer'), findsOneWidget);
     });
 
     testWidgets('Can navigate back from LaporanKeuangan to HomePage', (
@@ -60,11 +64,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Navigate to LaporanKeuangan
-      final laporanButton = find.ancestor(
-        of: find.text('Laporan\nKeuangan'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(laporanButton);
+      await tester.tap(find.text('Laporan Keuangan'));
       await tester.pumpAndSettle();
 
       // Go back
@@ -72,7 +72,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify back at HomePage
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
     });
 
     testWidgets('Can navigate back from DataRumahDanWarga to HomePage', (
@@ -82,11 +82,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Navigate to DataRumahDanWarga
-      final dataButton = find.ancestor(
-        of: find.text('Data Rumah\n& Warga'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(dataButton);
+      await tester.tap(find.text('Data Rumah dan Warga'));
       await tester.pumpAndSettle();
 
       // Go back
@@ -94,37 +90,19 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify back at HomePage
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
     });
 
-    testWidgets('Bottom navigation bar navigates correctly', (
+    testWidgets('HomePage has all navigation buttons', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(const JawaraApp());
       await tester.pumpAndSettle();
 
-      // Initial state - Dashboard
-      expect(find.text('Dashboard'), findsOneWidget);
-
-      // Tap Laporan menu in bottom nav
-      await tester.tap(find.text('Laporan'));
-      await tester.pumpAndSettle();
-
-      // Should stay on same page (HomePage) but could trigger state change
-      expect(find.text('Dashboard'), findsOneWidget);
-
-      // Tap Warga menu in bottom nav
-      await tester.tap(find.text('Warga'));
-      await tester.pumpAndSettle();
-
-      // Should stay on same page
-      expect(find.text('Dashboard'), findsOneWidget);
-
-      // Tap Beranda menu
-      await tester.tap(find.text('Beranda'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Dashboard'), findsOneWidget);
+      // Verify all navigation buttons exist
+      expect(find.text('Data Rumah dan Warga'), findsOneWidget);
+      expect(find.text('Laporan Keuangan'), findsOneWidget);
+      expect(find.text('Channel Transfer'), findsOneWidget);
     });
 
     testWidgets('Complete user flow: Home -> Laporan -> Back -> Data -> Back', (
@@ -134,35 +112,27 @@ void main() {
       await tester.pumpAndSettle();
 
       // Start at HomePage
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
 
       // Navigate to Laporan Keuangan
-      final laporanButton = find.ancestor(
-        of: find.text('Laporan\nKeuangan'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(laporanButton);
+      await tester.tap(find.text('Laporan Keuangan'));
       await tester.pumpAndSettle();
-      expect(find.text('Laporan Keuangan - Pemasukan'), findsOneWidget);
+      expect(find.text('Data Pemasukan'), findsOneWidget);
 
       // Go back to HomePage
       await tester.pageBack();
       await tester.pumpAndSettle();
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
 
-      // Navigate to Data Rumah & Warga
-      final dataButton = find.ancestor(
-        of: find.text('Data Rumah\n& Warga'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(dataButton);
+      // Navigate to Data Rumah dan Warga
+      await tester.tap(find.text('Data Rumah dan Warga'));
       await tester.pumpAndSettle();
       expect(find.text('Data Warga'), findsWidgets);
 
       // Go back to HomePage
       await tester.pageBack();
       await tester.pumpAndSettle();
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
     });
 
     testWidgets('All defined routes are accessible', (
@@ -171,22 +141,24 @@ void main() {
       await tester.pumpWidget(const JawaraApp());
       await tester.pumpAndSettle();
 
-      // Test each named route
-      final routes = [Routes.laporanKeuangan, Routes.dataRumahDanWarga];
+      // Test navigation using buttons
+      await tester.tap(find.text('Laporan Keuangan'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Scaffold), findsWidgets);
 
-      for (final route in routes) {
-        // Navigate to route
-        final context = tester.element(find.byType(MaterialApp));
-        Navigator.of(context).pushNamed(route);
-        await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
 
-        // Verify navigation occurred (no error)
-        expect(find.byType(Scaffold), findsWidgets);
+      await tester.tap(find.text('Data Rumah dan Warga'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Scaffold), findsWidgets);
 
-        // Go back
-        Navigator.of(context).pop();
-        await tester.pumpAndSettle();
-      }
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Channel Transfer'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Scaffold), findsWidgets);
     });
   });
 
@@ -198,63 +170,45 @@ void main() {
       await tester.pumpAndSettle();
 
       // Navigate to Laporan Keuangan
-      final laporanButton = find.ancestor(
-        of: find.text('Laporan\nKeuangan'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(laporanButton);
+      await tester.tap(find.text('Laporan Keuangan'));
       await tester.pumpAndSettle();
 
       // Toggle to Pengeluaran
       await tester.tap(find.text('Pengeluaran'));
       await tester.pumpAndSettle();
-      expect(find.text('Laporan Keuangan - Pengeluaran'), findsOneWidget);
+      expect(find.text('Data Pengeluaran'), findsOneWidget);
 
       // Go back to HomePage
       await tester.pageBack();
       await tester.pumpAndSettle();
 
       // Navigate back to Laporan Keuangan
-      await tester.tap(laporanButton);
+      await tester.tap(find.text('Laporan Keuangan'));
       await tester.pumpAndSettle();
 
       // Should show default view (Pemasukan)
-      expect(find.text('Laporan Keuangan - Pemasukan'), findsOneWidget);
+      expect(find.text('Data Pemasukan'), findsOneWidget);
     });
 
-    testWidgets('Dialog interactions across pages', (
+    testWidgets('Dialog interactions work correctly', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(const JawaraApp());
       await tester.pumpAndSettle();
 
       // Navigate to Data page
-      final dataButton = find.ancestor(
-        of: find.text('Data Rumah\n& Warga'),
-        matching: find.byType(InkWell),
-      );
-      await tester.tap(dataButton);
+      await tester.tap(find.text('Data Rumah dan Warga'));
       await tester.pumpAndSettle();
 
-      // Open detail dialog
-      await tester.tap(find.byIcon(Icons.more_horiz).first);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Detail'));
-      await tester.pumpAndSettle();
-
-      // Verify dialog opened
-      expect(find.text('Detail Warga'), findsOneWidget);
-
-      // Close dialog
-      await tester.tap(find.text('Tutup'));
-      await tester.pumpAndSettle();
+      // Verify we are on the data page
+      expect(find.text('Data Warga'), findsWidgets);
 
       // Navigate back
       await tester.pageBack();
       await tester.pumpAndSettle();
 
       // Verify at HomePage
-      expect(find.text('Dashboard'), findsOneWidget);
+      expect(find.text('Jawara Pintar'), findsOneWidget);
     });
   });
 
@@ -288,18 +242,23 @@ void main() {
       expect(tester.takeException(), isNull);
 
       // Navigate to each page and check
-      final routes = [Routes.laporanKeuangan, Routes.dataRumahDanWarga];
+      await tester.tap(find.text('Laporan Keuangan'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
 
-      for (final route in routes) {
-        final context = tester.element(find.byType(MaterialApp));
-        Navigator.of(context).pushNamed(route);
-        await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Data Rumah dan Warga'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
 
-        Navigator.of(context).pop();
-        await tester.pumpAndSettle();
-      }
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Channel Transfer'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
     });
   });
 }

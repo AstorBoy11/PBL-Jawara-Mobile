@@ -11,20 +11,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pbl_jawara_mobile/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('JawaraApp smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const JawaraApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the app launches correctly with HomePage
+    expect(find.text('Jawara Pintar'), findsOneWidget);
+    expect(find.text('Home'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify that navigation buttons are present
+    expect(find.text('Data Rumah dan Warga'), findsOneWidget);
+    expect(find.text('Laporan Keuangan'), findsOneWidget);
+    expect(find.text('Channel Transfer'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('JawaraApp has MaterialApp', (WidgetTester tester) async {
+    await tester.pumpWidget(const JawaraApp());
+
+    // Verify MaterialApp exists
+    expect(find.byType(MaterialApp), findsOneWidget);
+  });
+
+  testWidgets('JawaraApp displays correct title', (WidgetTester tester) async {
+    await tester.pumpWidget(const JawaraApp());
+    await tester.pumpAndSettle();
+
+    // Verify the main title is displayed
+    expect(find.text('Jawara Pintar'), findsOneWidget);
   });
 }
